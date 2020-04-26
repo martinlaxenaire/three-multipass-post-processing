@@ -46,7 +46,7 @@ import {
  *      - fragmentShader: (string optionnal) fragmentShader to use. Uses the default const fragmentShader (that just display your scene) if none specified.
  *
  */
-class MultiPostFX {
+export class MultiPostFX {
     constructor(params) {
         this.renderer = params.renderer;
 
@@ -169,5 +169,3 @@ class MultiPostFX {
         }
     }
 }
-
-module.exports = {MultiPostFX};
