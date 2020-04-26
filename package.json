@@ -8,5 +8,6 @@
   "dependencies": {
     "three": "^0.114.0"
   },
+  "type": "module",
   "description": "Three.js helper to create multi passes post processing effects"
 }
