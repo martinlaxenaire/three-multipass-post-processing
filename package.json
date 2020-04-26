@@ -1,7 +1,8 @@
 {
   "name": "three-multipass-post-processing",
   "version": "1.0.0",
-  "main": "dist/three.multipass.post.processing.esm.mjs",
+  "main": "dist/three.multipass.post.processing.esm.js",
+  "type": "module",
   "author": "martinlaxenaire",
   "homepage": "https://github.com/martinlaxenaire/three-multipass-post-processing",
   "license": "MIT",
