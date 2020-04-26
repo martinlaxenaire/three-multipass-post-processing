@@ -170,4 +170,4 @@ class MultiPostFX {
     }
 }
 
-export default MultiPostFX;
+module.exports = {MultiPostFX};
