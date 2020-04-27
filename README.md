@@ -1,14 +1,27 @@
 Three.js helper to create multi passes post processing effects.
 
-Based on this [excellent article](https://medium.com/@luruke/simple-postprocessing-in-three-js-91936ecadfb7) by [luruke](https://github.com/luruke), this allows to easily add multiple passes post processing to your three.js renders.
+Based on this [excellent article](https://medium.com/@luruke/simple-postprocessing-in-three-js-91936ecadfb7) by [luruke](https://github.com/luruke), this allows to easily add multiple passes post processing to your three.js scenes.
 
 <h2>Installation</h2>
+
+In a browser:
     
 ```html
+<script src="three.min.js"></script>
 <script src="three.multipass.post.processing.min.js"></script>
 ```
 
-There's also an ESM class based module available in the dist folder: three.multipass.post.processing.esm.min.js
+Using npm:
+
+```
+npm install martinlaxenaire/three-multipass-post-processing
+```
+
+Load ES module:
+
+```javascript
+import MultiPostFX from 'three-multipass-post-processing';
+```
 
 <h2>Initializing</h2>
 
@@ -16,23 +29,24 @@ There's also an ESM class based module available in the dist folder: three.multi
 // assuming 'renderer' is a THREE.WebGLRenderer class object
 const multiPostFX = new MultiPostFX({
     renderer: renderer,
-    passes: [
-        {
+    passes: {
+        invertColors: {
             fragmentShader: `
                 precision highp float;
                 uniform sampler2D uScene;
                 uniform vec2 uResolution;
+                
                 void main() {
-                    // get uvs
                     vec2 uv = gl_FragCoord.xy / uResolution.xy;
                     vec4 color = texture2D(uScene, uv);
-                    // Do your cool postprocessing here
-                    color.r += sin(uv.x * 50.0);
+                    // invert colors                 
+                    color = mix(color, vec4((1.0 - color.rgb) * color.a, color.a), step(uv.x, 0.5));
+                    color = mix(color, vec4((1.0 - color.rgb) * color.a, color.a), step(uv.y, 0.5));
                     gl_FragColor = color;
                 }
-            `
-        }
-    ]
+            `,
+        },
+    }
 });
 
 // ...
@@ -61,6 +75,7 @@ multiPostFX.render(scene, camera);
 There are two default uniforms that your passes will always use:
 
 `uScene` (three.js [Texture](https://threejs.org/docs/#api/en/textures/Texture)): a texture containing the scene to which post processing will be applied.
+
 `uResolution` (three.js [Vector2](https://threejs.org/docs/#api/en/math/Vector2)): your renderer parameter sizes, used to calculate the UV in your fragment shader. 
 
 <h3>Built-in shaders</h3>
@@ -157,7 +172,7 @@ let passes = {
             }
         `
     },
-    invertHalfScreenColors: {
+    invertColors: {
         fragmentShader: `
             precision highp float;
             uniform sampler2D uScene;
@@ -166,10 +181,9 @@ let passes = {
             void main() {
                 vec2 uv = gl_FragCoord.xy / uResolution.xy;
                 vec4 color = texture2D(uScene, uv);
-                // invert screen's right half colors 
-                if(uv.x >= 0.5) {
-                    color.rgb = (1.0 - color.rgb) * color.a;
-                }
+                // invert colors                 
+                color = mix(color, vec4((1.0 - color.rgb) * color.a, color.a), step(uv.x, 0.5));
+                color = mix(color, vec4((1.0 - color.rgb) * color.a, color.a), step(uv.y, 0.5));
                 gl_FragColor = color;
             }
         `,
@@ -213,3 +227,19 @@ function onResize() {
     postFX.resize();
 }
 ```
+
+<h2>Useful post processing shaders</h2>
+
+All credits go to their respective authors.
+
+<ul>
+    <li>
+        https://github.com/spite/Wagner/tree/master/fragment-shaders
+    </li>
+    <li>
+        https://github.com/vanruesc/postprocessing/tree/master/src/effects/glsl
+    </li>
+    <li>
+        https://github.com/cansik/processing-postfx/tree/master/shader
+    </li>
+</ul>
