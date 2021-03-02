@@ -1,13 +1,13 @@
 {
   "name": "three-multipass-post-processing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/three.multipass.post.processing.esm.js",
   "type": "module",
   "author": "martinlaxenaire",
   "homepage": "https://github.com/martinlaxenaire/three-multipass-post-processing",
   "license": "MIT",
   "dependencies": {
-    "three": "^0.114.0"
+    "three": ">=0.125.0"
   },
   "description": "Three.js helper to create multi passes post processing effects"
 }
